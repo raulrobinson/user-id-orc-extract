@@ -50,8 +50,8 @@ public class ScheduledTask {
      * @void                            Only Console Output.
      */
     //@Scheduled(cron = "0 18 12 * * ?")
-    //@Scheduled(cron = "${sec.min.hour.day.month}")
-    @Scheduled(fixedDelayString = "${scheduled.delay}")
+    @Scheduled(cron = "${sec.min.hour.day.month}")
+    //@Scheduled(fixedDelayString = "${scheduled.delay}")
     public void executeProcedure() {
 
         // Set SP to CALL.
