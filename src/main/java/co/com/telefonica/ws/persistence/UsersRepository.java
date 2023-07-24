@@ -18,7 +18,7 @@ public interface UsersRepository extends JpaRepository<Users, String> {
      * @return the integer
      */
     @Query(value = "SELECT COUNT(*) " +
-            "FROM DWHODS.USERS " +
+            "FROM DWHODS.DETALLE_DOCUMENTOS_FS_BASE " +
             "WHERE TRUNC(LOAD_DATE) = TO_DATE(:loadDate, 'YYYY-MM-DD')",
             nativeQuery = true)
     Integer countUsersByDate(String loadDate);

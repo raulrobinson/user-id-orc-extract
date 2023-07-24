@@ -22,9 +22,6 @@ public class ScheduledTask {
     private final JdbcTemplate jdbcTemplate;
     private final UsersRepository repository;
 
-    @Value("${date.extract.data}")
-    private String loadDateProg;
-
     /**
      * Instantiates a new Scheduled task.
      *
@@ -50,14 +47,13 @@ public class ScheduledTask {
      * @void                            Only Console Output.
      */
     //@Scheduled(cron = "0 18 12 * * ?")
-    @Scheduled(cron = "${sec.min.hour.day.month}")
-    //@Scheduled(fixedDelayString = "${scheduled.delay}")
+    //@Scheduled(cron = "${sec.min.hour.day.month}")
+    @Scheduled(fixedDelayString = "${scheduled.delay}")
     public void executeProcedure() {
 
         // Set SP to CALL.
-        String procedureCall = "{ CALL DWHODS.PRO_BI_XY_DOCUMENTOS_FS (?) }";
-        String loadDate = loadDateProg;
-        jdbcTemplate.update(procedureCall, loadDate);
+        String procedureCall = "CALL DWHODS.PRO_BI_XY_DOCUMENTOS_FS('')";
+        jdbcTemplate.update(procedureCall);
 
         // Set DATE.
         LocalDateTime currentDateTime = LocalDateTime.now();

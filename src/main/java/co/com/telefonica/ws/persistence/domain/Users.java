@@ -13,15 +13,15 @@ import java.util.Date;
  */
 @Data
 @Entity
-@Table(name = "USERS", schema = "DWHODS")
+@Table(name = "DETALLE_DOCUMENTOS_FS_BASE", schema = "DWHODS")
 public class Users {
 
-    @Column(name = "NAME")
-    private String name;
-
     @Id
-    @Column(name = "EMAIL")
-    private String email;
+    @Column(name = "ID_NUMBER")
+    private String idNumber;
+
+    @Column(name = "ID_TYPE")
+    private String idType;
 
     @Column(name = "LOAD_DATE")
     private Date loadDate;
