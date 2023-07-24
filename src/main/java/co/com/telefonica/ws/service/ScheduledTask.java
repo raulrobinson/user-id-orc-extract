@@ -48,7 +48,10 @@ public class ScheduledTask {
      */
     //@Scheduled(cron = "0 0 6 * * *")
     @Scheduled(cron = "${cron.set}")
+    //@Scheduled(fixedDelayString = "${scheduled.delay}")
     public void executeProcedure() {
+
+        log.info("STARTING PROCESS AT: {}", new Date());
 
         // Set SP to CALL.
         String procedureCall = "CALL DWHODS.PRO_BI_XY_DOCUMENTOS_FS('')";
