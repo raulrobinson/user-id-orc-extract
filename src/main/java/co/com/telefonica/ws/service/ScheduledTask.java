@@ -48,7 +48,7 @@ public class ScheduledTask {
      * @Scheduled(cron = "${sec.min.hour.day.month}")
      * @void                            Only Console Output.
      */
-    @Scheduled(cron = "0 5 17 * * *")
+    @Scheduled(cron = "0 10 19 * * *")
     public void executeProcedure() {
 
         // Set SP to CALL.
