@@ -44,10 +44,9 @@ public class ScheduledTask {
      *
      * @Scheduled(cron = "0 0 1 * * ?") Execute at 1:00 AM every day.
      * @Scheduled(fixedDelayString = "${scheduled.delay}")
+     * @Scheduled(cron = "${sec.min.hour.day.month}")
      * @void                            Only Console Output.
      */
-    //@Scheduled(cron = "0 18 12 * * ?")
-    //@Scheduled(cron = "${sec.min.hour.day.month}")
     @Scheduled(fixedDelayString = "${scheduled.delay}")
     public void executeProcedure() {
 
