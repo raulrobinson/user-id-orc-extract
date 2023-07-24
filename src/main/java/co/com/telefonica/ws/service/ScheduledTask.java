@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,7 +17,7 @@ import java.util.Date;
  * The type Scheduled task.
  */
 @Slf4j
-@Component
+@Service
 public class ScheduledTask {
 
     private final JdbcTemplate jdbcTemplate;
