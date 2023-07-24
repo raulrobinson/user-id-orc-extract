@@ -41,12 +41,13 @@ public class ScheduledTask {
     /**
      * Execute procedure.
      *
-     * @Scheduled(cron = "0 0 6 * * ?") Execute at 1:00 AM every day (-5 GMT).
+     * @Scheduled(cron = "0 0 6 * * *") Execute at 1:00 AM every day (-5 GMT).
      * @Scheduled(fixedDelayString = "${scheduled.delay}")
      * @Scheduled(cron = "${sec.min.hour.day.month}")
      * @void                            Only Console Output.
      */
-    @Scheduled(cron = "0 0 6 * * *")
+    //@Scheduled(cron = "0 0 6 * * *")
+    @Scheduled(cron = "${cron.set}")
     public void executeProcedure() {
 
         // Set SP to CALL.
