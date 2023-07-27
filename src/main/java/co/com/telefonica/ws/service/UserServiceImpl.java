@@ -7,6 +7,7 @@ import co.com.telefonica.ws.repository.UsersRepository;
 import co.com.telefonica.ws.util.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.*;
@@ -23,6 +24,9 @@ import java.util.List;
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Value("${ms.postgres.url}")
+    private String msUrlPg;
 
     private final RestTemplate restTemplate;
     private final UsersRepository userRepository;
@@ -84,7 +88,7 @@ public class UserServiceImpl implements UserService {
                            String loadDate,
                            int page) {
         try {
-            String url = "http://localhost:8082/v1/postgres/save-in-batch";
+            String url = msUrlPg;
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<List<PgUserDTO>> requestEntity = new HttpEntity<>(userList, headers);
