@@ -1,6 +1,9 @@
-package co.com.telefonica.ws.persistence.domain;
+package co.com.telefonica.ws.domain;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,22 +11,22 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
-/**
- * The type Users.
- */
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "DETALLE_DOCUMENTOS_FS_BASE", schema = "DWHODS")
-public class Users {
-
+@AllArgsConstructor
+@NoArgsConstructor
+public class OdsUser {
     @Id
-    @Column(name = "ID_NUMBER")
-    private String idNumber;
+    private int id;
 
     @Column(name = "ID_TYPE")
     private String idType;
 
+    @Column(name = "ID_NUMBER")
+    private String idNumber;
+
     @Column(name = "LOAD_DATE")
     private Date loadDate;
-
 }
