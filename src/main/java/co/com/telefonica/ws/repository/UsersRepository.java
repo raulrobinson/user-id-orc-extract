@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface UsersRepository extends JpaRepository<Users, String> {
+
     @Query(value = "SELECT " +
             "ROW_NUMBER() OVER (ORDER BY load_date) AS id, " +
             "id_type, " +

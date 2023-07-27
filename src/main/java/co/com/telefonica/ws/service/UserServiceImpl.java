@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
             var totalRegisters = userRepository.findUsersByLoadDateStr(dateString).size();
 
             // Construct the batch by load_date.
-            int size = 4; // SIZE
+            int size = 10; // SIZE
 
             // Get total pages.
             var totalPages = totalRegisters / size;
@@ -58,8 +58,8 @@ public class UserServiceImpl implements UserService {
             // FOR process register per page.
             HashMap<String, Integer> response = new HashMap<>();
             for (int i = 0; i < totalPages; i++) { // # PAGE
-                PageRequest pageRequest = PageRequest.of(i, size);
-                Page<OdsUser> usersPage = odsUserRepository.findUsersByLoadDate(loadDate, pageRequest);
+                //PageRequest pageRequest = PageRequest.of(i, size);
+                Page<OdsUser> usersPage = odsUserRepository.findUsersByLoadDate(loadDate, 1, 100);//pageRequest);
                 var userList =  convertBatchOdsToPgPage(usersPage);
                 response.put("PAGE: " + i, userList.size());
                 sendToPg(userList, dateString, i);

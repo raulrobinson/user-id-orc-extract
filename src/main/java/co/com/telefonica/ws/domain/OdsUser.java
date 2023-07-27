@@ -18,12 +18,10 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OdsUser {
-    @Id
-    private int id;
-
     @Column(name = "ID_TYPE")
     private String idType;
 
+    @Id
     @Column(name = "ID_NUMBER")
     private String idNumber;
 
