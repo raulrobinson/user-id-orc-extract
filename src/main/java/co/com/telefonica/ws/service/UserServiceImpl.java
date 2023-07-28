@@ -52,11 +52,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Object getRegistersPaginadosPorLoadDateOdsUser(Date loadDate, int pageSize, int pageNumber) {
+    public ResponseEntity<String> getRegistersPaginadosPorLoadDateOdsUser(Date loadDate, int pageSize, int pageNumber) {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
         Page<OdsUser> page = odsUserRepository.findByLoadDate(loadDate, pageRequest);
         var userList =  convertBatchOdsToPgPage(page);
-        return sendToPgThree(userList);
+        var response = sendToPgThree(userList);
+        return new ResponseEntity<>(response.getStatusCode());
     }
 
     /* >>>>>>>>>>>>>>>>>>>>>>>>>> */
@@ -157,7 +158,7 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity<>("400 Bad Request", HttpStatus.BAD_REQUEST);
     }
 
-    public Object sendToPgThree(List<PgUserDTO> userList) {
+    public ResponseEntity<String> sendToPgThree(List<PgUserDTO> userList) {
         try {
             String url = msUrlPg;
             HttpHeaders headers = new HttpHeaders();
@@ -165,14 +166,14 @@ public class UserServiceImpl implements UserService {
             HttpEntity<List<PgUserDTO>> requestEntity = new HttpEntity<>(userList, headers);
             ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Void.class);
             if (response.getStatusCode().is2xxSuccessful()) {
-                log.info("TOTAL SENT={}", userList.size());
+                log.info(Constants.RESPONSE_TOTAL, userList.size());
                 return new ResponseEntity<>("200 OK", HttpStatus.OK);
             }
         } catch (ResourceAccessException ex) {
-            log.error("TOTAL SENT={}", userList.size());
+            log.error(Constants.RESPONSE_TOTAL, userList.size());
             return new ResponseEntity<>("500 Not Unavailable", HttpStatus.SERVICE_UNAVAILABLE);
         }
-        log.error("TOTAL SENT={}", userList.size());
+        log.error(Constants.RESPONSE_TOTAL, userList.size());
         return new ResponseEntity<>("400 Bad Request", HttpStatus.BAD_REQUEST);
     }
 }
