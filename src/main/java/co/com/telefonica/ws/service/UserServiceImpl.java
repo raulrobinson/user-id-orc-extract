@@ -52,10 +52,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<OdsUser> getRegistersPaginadosPorLoadDateOdsUser(Date loadDate, int pageSize, int pageNumber) {
+    public Object getRegistersPaginadosPorLoadDateOdsUser(Date loadDate, int pageSize, int pageNumber) {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
         Page<OdsUser> page = odsUserRepository.findByLoadDate(loadDate, pageRequest);
-        return page.getContent();
+        var userList =  convertBatchOdsToPgPage(page);
+        return sendToPgThree(userList);
     }
 
     /* >>>>>>>>>>>>>>>>>>>>>>>>>> */
@@ -111,7 +112,6 @@ public class UserServiceImpl implements UserService {
             for (int i = 0; i < totalPages; i++) { // # PAGE
                 PageRequest pageRequest = PageRequest.of(i, size);
                 Page<OdsUser> usersPage = odsUserRepository.findByLoadDate(loadDate, pageRequest);
-                //Page<OdsUser> usersPage = odsUserRepository.findUsersByLoadDate(loadDate, 1, 100, pageRequest);
                 var userList =  convertBatchOdsToPgPage(usersPage);
                 response.put("PAGE: " + i, userList.size());
                 sendToPg(userList, dateString, i);
@@ -154,6 +154,25 @@ public class UserServiceImpl implements UserService {
             return new ResponseEntity<>("500 Not Unavailable", HttpStatus.SERVICE_UNAVAILABLE);
         }
         log.error(Constants.BAD_REQUEST_SERVICE, userList.size(), page, loadDate);
+        return new ResponseEntity<>("400 Bad Request", HttpStatus.BAD_REQUEST);
+    }
+
+    public Object sendToPgThree(List<PgUserDTO> userList) {
+        try {
+            String url = msUrlPg;
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<List<PgUserDTO>> requestEntity = new HttpEntity<>(userList, headers);
+            ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Void.class);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                log.info("TOTAL SENT={}", userList.size());
+                return new ResponseEntity<>("200 OK", HttpStatus.OK);
+            }
+        } catch (ResourceAccessException ex) {
+            log.error("TOTAL SENT={}", userList.size());
+            return new ResponseEntity<>("500 Not Unavailable", HttpStatus.SERVICE_UNAVAILABLE);
+        }
+        log.error("TOTAL SENT={}", userList.size());
         return new ResponseEntity<>("400 Bad Request", HttpStatus.BAD_REQUEST);
     }
 }

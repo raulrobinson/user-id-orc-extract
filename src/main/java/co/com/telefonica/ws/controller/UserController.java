@@ -49,7 +49,7 @@ public class UserController {
     }
 
     @GetMapping("/registros-odsuser/{loadDate}/{pageSize}/{pageNumber}")
-    public ResponseEntity<List<OdsUser>> obtenerRegistrosPaginadosPorLoadDateOdsUser(
+    public ResponseEntity<?> obtenerRegistrosPaginadosPorLoadDateOdsUser(
             @PathVariable String loadDate,
             @PathVariable int pageSize,
             @PathVariable int pageNumber
@@ -61,7 +61,7 @@ public class UserController {
         } catch (ParseException e) {
             return ResponseEntity.badRequest().build();
         }
-        List<OdsUser> registers = service.getRegistersPaginadosPorLoadDateOdsUser(parsedDate, pageSize, pageNumber);
+        var registers = service.getRegistersPaginadosPorLoadDateOdsUser(parsedDate, pageSize, pageNumber);
         return ResponseEntity.ok(registers);
     }
 

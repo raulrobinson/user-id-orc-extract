@@ -17,7 +17,7 @@ public interface UserService {
 
     //List<OdsUser> obtenerRegistrosPorLoadDateId(Date loadDate);
 
-    List<OdsUser> getRegistersPaginadosPorLoadDateOdsUser(Date loadDate, int pageSize, int pageNumber);
+    Object getRegistersPaginadosPorLoadDateOdsUser(Date loadDate, int pageSize, int pageNumber);
 
     ResponseEntity<String> sendDataToPgPerDatePage(Date loadDate);
 }
