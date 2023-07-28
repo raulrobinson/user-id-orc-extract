@@ -51,13 +51,13 @@ public class UserServiceImpl implements UserService {
         return page.getContent();
     }
 
+    // >>>>>>>>>>>>>>>>>>>>>>> WORKING 18
     @Override
-    public ResponseEntity<String> getRegistersPaginadosPorLoadDateOdsUser(Date loadDate, int pageSize, int pageNumber) {
+    public Long getRegistersPaginadosPorLoadDateOdsUser(Date loadDate, int pageSize, int pageNumber) {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
         Page<OdsUser> page = odsUserRepository.findByLoadDate(loadDate, pageRequest);
         var userList =  convertBatchOdsToPgPage(page);
-        var response = sendToPgThree(userList);
-        return new ResponseEntity<>(response.getStatusCode());
+        return sendToPgThree(userList);
     }
 
     /* >>>>>>>>>>>>>>>>>>>>>>>>>> */
@@ -126,6 +126,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    // >>>>>>>>>>>>>>>>>>>>>>> WORKING 18
     public List<PgUserDTO> convertBatchOdsToPgPage(Page<OdsUser> usersPage) {
         List<PgUserDTO> userList = new ArrayList<>();
         for (OdsUser pgItem : usersPage) {
@@ -158,7 +159,8 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity<>("400 Bad Request", HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<String> sendToPgThree(List<PgUserDTO> userList) {
+    // >>>>>>>>>>>>>>>>>>>>>>> WORKING 18
+    public Long sendToPgThree(List<PgUserDTO> userList) {
         try {
             String url = msUrlPg;
             HttpHeaders headers = new HttpHeaders();
@@ -167,13 +169,13 @@ public class UserServiceImpl implements UserService {
             ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Void.class);
             if (response.getStatusCode().is2xxSuccessful()) {
                 log.info(Constants.RESPONSE_TOTAL, userList.size());
-                return new ResponseEntity<>("200 OK", HttpStatus.OK);
+                return 200L;
             }
         } catch (ResourceAccessException ex) {
             log.error(Constants.RESPONSE_TOTAL, userList.size());
-            return new ResponseEntity<>("500 Not Unavailable", HttpStatus.SERVICE_UNAVAILABLE);
+            return 500L;
         }
         log.error(Constants.RESPONSE_TOTAL, userList.size());
-        return new ResponseEntity<>("400 Bad Request", HttpStatus.BAD_REQUEST);
+        return 400L;
     }
 }
