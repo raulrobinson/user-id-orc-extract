@@ -1,7 +1,9 @@
 package co.com.telefonica.ws.service;
 
 import co.com.telefonica.ws.domain.OdsUser;
+import co.com.telefonica.ws.dto.DetalleDocumentosFsBase;
 import co.com.telefonica.ws.dto.PgUserDTO;
+import co.com.telefonica.ws.repository.DetalleDocumentosFsBaseRepository;
 import co.com.telefonica.ws.repository.OdsUserRepository;
 import co.com.telefonica.ws.repository.UsersRepository;
 import co.com.telefonica.ws.util.Constants;
@@ -31,15 +33,26 @@ public class UserServiceImpl implements UserService {
     private final RestTemplate restTemplate;
     private final UsersRepository userRepository;
     private final OdsUserRepository odsUserRepository;
+    private final DetalleDocumentosFsBaseRepository repository;
 
     @Autowired
-    public UserServiceImpl(RestTemplate restTemplate, UsersRepository userRepository, OdsUserRepository odsUserRepository) {
+    public UserServiceImpl(RestTemplate restTemplate, UsersRepository userRepository, OdsUserRepository odsUserRepository, DetalleDocumentosFsBaseRepository repository) {
         this.restTemplate = restTemplate;
         this.userRepository = userRepository;
         this.odsUserRepository = odsUserRepository;
+        this.repository = repository;
     }
 
     /*TEST*/
+    @Override
+    public List<DetalleDocumentosFsBase> obtenerRegistrosPaginadosPorLoadDate(Date loadDate, int pageSize, int pageNumber) {
+        //int pageSize = 5;
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        Page<DetalleDocumentosFsBase> page = repository.findByLoadDate(loadDate, pageRequest);
+        return page.getContent();
+    }
+
+
     @Override
     public List<OdsUser> obtenerRegistrosPorLoadDate(Date loadDate) {
         int offset = 0;
@@ -49,6 +62,21 @@ public class UserServiceImpl implements UserService {
             registros = odsUserRepository.findInGroupsOf100ByLoadDate(loadDate, offset);
             registrosTotales.addAll(registros);
             offset += 100;
+        } while (!registros.isEmpty());
+
+        return registrosTotales;
+    }
+
+    @Override
+    public List<OdsUser> obtenerRegistrosPorLoadDateId(Date loadDate) {
+        int offset = 0;
+        List<OdsUser> registrosTotales = new ArrayList<>();
+        List<OdsUser> registros;
+        //PageRequest pageRequest = PageRequest.of(0, 10);
+        do {
+            registros = odsUserRepository.findInGroupsOf100ByLoadDateId(loadDate, offset);
+            registrosTotales.addAll(registros);
+            offset += 3;
         } while (!registros.isEmpty());
 
         return registrosTotales;

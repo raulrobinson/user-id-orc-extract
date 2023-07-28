@@ -1,6 +1,8 @@
 package co.com.telefonica.ws.controller;
 
 import co.com.telefonica.ws.domain.OdsUser;
+import co.com.telefonica.ws.dto.DetalleDocumentosDto;
+import co.com.telefonica.ws.dto.DetalleDocumentosFsBase;
 import co.com.telefonica.ws.service.UserService;
 import co.com.telefonica.ws.util.Constants;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,23 @@ public class UserController {
         this.service = service;
     }
 
+    @GetMapping("/registros/{loadDate}/{pageSize}/{pageNumber}")
+    public ResponseEntity<List<DetalleDocumentosFsBase>> obtenerRegistrosPaginadosPorLoadDate(
+            @PathVariable String loadDate,
+            @PathVariable int pageSize,
+            @PathVariable int pageNumber
+    ) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date parsedDate;
+        try {
+            parsedDate = dateFormat.parse(loadDate);
+        } catch (ParseException e) {
+            return ResponseEntity.badRequest().build();
+        }
+        List<DetalleDocumentosFsBase> registros = service.obtenerRegistrosPaginadosPorLoadDate(parsedDate, pageSize, pageNumber);
+        return ResponseEntity.ok(registros);
+    }
+
     @GetMapping("/registros/{loadDate}")
     public ResponseEntity<List<OdsUser>> obtenerRegistrosPorLoadDate(@PathVariable String loadDate) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -38,6 +57,19 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
         List<OdsUser> registros = service.obtenerRegistrosPorLoadDate(parsedDate);
+        return ResponseEntity.ok(registros);
+    }
+
+    @GetMapping("/registros-id/{loadDate}")
+    public ResponseEntity<List<OdsUser>> obtenerRegistrosPorLoadDateId(@PathVariable String loadDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date parsedDate;
+        try {
+            parsedDate = dateFormat.parse(loadDate);
+        } catch (ParseException e) {
+            return ResponseEntity.badRequest().build();
+        }
+        List<OdsUser> registros = service.obtenerRegistrosPorLoadDateId(parsedDate);
         return ResponseEntity.ok(registros);
     }
 

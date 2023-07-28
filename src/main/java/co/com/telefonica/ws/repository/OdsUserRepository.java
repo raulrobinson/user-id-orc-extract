@@ -1,6 +1,7 @@
 package co.com.telefonica.ws.repository;
 
 import co.com.telefonica.ws.domain.OdsUser;
+import co.com.telefonica.ws.dto.DetalleDocumentosDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,5 +28,18 @@ public interface OdsUserRepository extends JpaRepository<OdsUser, String> {
             "ORDER BY ID_TYPE, ID_NUMBER " +
             "OFFSET :offset ROWS FETCH NEXT 100 ROWS ONLY", nativeQuery = true)
     List<OdsUser> findInGroupsOf100ByLoadDate(Date loadDate, int offset);
+
+    @Query(value = "SELECT " +
+            "ROW_NUMBER() OVER (ORDER BY load_date) AS id, " +
+            "id_type, " +
+            "id_number, " +
+            "load_date " +
+            "FROM DWHODS.DETALLE_DOCUMENTOS_FS_BASE " +
+            "WHERE LOAD_DATE = :loadDate " +
+            //"ORDER BY ID_TYPE, ID_NUMBER " //+
+            "OFFSET :offset ROWS FETCH NEXT 3 ROWS ONLY"
+            //countQuery = "SELECT COUNT(*) FROM DWHODS.DETALLE_DOCUMENTOS_FS_BASE WHERE load_date = :loadDate",
+            , nativeQuery = true)
+    List<OdsUser> findInGroupsOf100ByLoadDateId(Date loadDate, int offset);
 
 }
