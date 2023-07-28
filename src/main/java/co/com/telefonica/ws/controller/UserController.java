@@ -1,5 +1,6 @@
 package co.com.telefonica.ws.controller;
 
+import co.com.telefonica.ws.domain.OdsUser;
 import co.com.telefonica.ws.service.UserService;
 import co.com.telefonica.ws.util.Constants;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/v1/oracle")
+@RequestMapping("/oracle")
 public class UserController {
 
     private final UserService service;
@@ -24,6 +26,19 @@ public class UserController {
     @Autowired
     public UserController(UserService service) {
         this.service = service;
+    }
+
+    @GetMapping("/registros/{loadDate}")
+    public ResponseEntity<List<OdsUser>> obtenerRegistrosPorLoadDate(@PathVariable String loadDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date parsedDate;
+        try {
+            parsedDate = dateFormat.parse(loadDate);
+        } catch (ParseException e) {
+            return ResponseEntity.badRequest().build();
+        }
+        List<OdsUser> registros = service.obtenerRegistrosPorLoadDate(parsedDate);
+        return ResponseEntity.ok(registros);
     }
 
     @GetMapping("/{loadDate}")

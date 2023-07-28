@@ -2,10 +2,12 @@ package co.com.telefonica.ws.repository;
 
 import co.com.telefonica.ws.domain.OdsUser;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Date;
+import java.util.List;
 
 public interface OdsUserRepository extends JpaRepository<OdsUser, String> {
 
@@ -20,10 +22,10 @@ public interface OdsUserRepository extends JpaRepository<OdsUser, String> {
     //        nativeQuery = true)
     //Page<OdsUser> findUsersByLoadDate(Date loadDate, Pageable pageable);
 
-    @Query(value = "SELECT * " +
-            "FROM (SELECT id_type, id_number, load_date FROM (SELECT id_type, id_number, load_date, ROWNUM AS rn, COUNT(*) OVER () AS total_registros " +
-            "FROM DWHODS.DETALLE_DOCUMENTOS_FS_BASE " +
-            "WHERE LOAD_DATE = TO_TIMESTAMP(:loadDate, 'YYYY-MM-DD') ORDER BY ID_NUMBER) WHERE rn >= :start AND rn <= :end)", nativeQuery = true)
-    Page<OdsUser> findUsersByLoadDate(Date loadDate, int start, int end);
+    @Query(value = "SELECT * FROM DWHODS.DETALLE_DOCUMENTOS_FS_BASE " +
+            "WHERE LOAD_DATE = :loadDate " +
+            "ORDER BY ID_TYPE, ID_NUMBER " +
+            "OFFSET :offset ROWS FETCH NEXT 100 ROWS ONLY", nativeQuery = true)
+    List<OdsUser> findInGroupsOf100ByLoadDate(Date loadDate, int offset);
 
 }

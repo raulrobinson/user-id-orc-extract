@@ -39,6 +39,22 @@ public class UserServiceImpl implements UserService {
         this.odsUserRepository = odsUserRepository;
     }
 
+    /*TEST*/
+    @Override
+    public List<OdsUser> obtenerRegistrosPorLoadDate(Date loadDate) {
+        int offset = 0;
+        List<OdsUser> registrosTotales = new ArrayList<>();
+        List<OdsUser> registros;
+        do {
+            registros = odsUserRepository.findInGroupsOf100ByLoadDate(loadDate, offset);
+            registrosTotales.addAll(registros);
+            offset += 100;
+        } while (!registros.isEmpty());
+
+        return registrosTotales;
+    }
+    /**** */
+
     @Override
     public ResponseEntity<String> sendDataToPgPerDatePage(Date loadDate) {
         try {
@@ -58,11 +74,11 @@ public class UserServiceImpl implements UserService {
             // FOR process register per page.
             HashMap<String, Integer> response = new HashMap<>();
             for (int i = 0; i < totalPages; i++) { // # PAGE
-                //PageRequest pageRequest = PageRequest.of(i, size);
-                Page<OdsUser> usersPage = odsUserRepository.findUsersByLoadDate(loadDate, 1, 100);//pageRequest);
-                var userList =  convertBatchOdsToPgPage(usersPage);
-                response.put("PAGE: " + i, userList.size());
-                sendToPg(userList, dateString, i);
+                PageRequest pageRequest = PageRequest.of(i, size);
+                //Page<OdsUser> usersPage = odsUserRepository.findUsersByLoadDate(loadDate, 1, 100, pageRequest);
+                //var userList =  convertBatchOdsToPgPage(usersPage);
+                //response.put("PAGE: " + i, userList.size());
+                //sendToPg(userList, dateString, i);
             }
             if (response.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
