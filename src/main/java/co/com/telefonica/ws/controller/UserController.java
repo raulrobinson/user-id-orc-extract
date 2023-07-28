@@ -30,6 +30,7 @@ public class UserController {
         this.service = service;
     }
 
+    /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WORKING 15 */
     @GetMapping("/registros/{loadDate}/{pageSize}/{pageNumber}")
     public ResponseEntity<List<DetalleDocumentosFsBase>> obtenerRegistrosPaginadosPorLoadDate(
             @PathVariable String loadDate,
@@ -43,12 +44,16 @@ public class UserController {
         } catch (ParseException e) {
             return ResponseEntity.badRequest().build();
         }
-        List<DetalleDocumentosFsBase> registros = service.obtenerRegistrosPaginadosPorLoadDate(parsedDate, pageSize, pageNumber);
-        return ResponseEntity.ok(registros);
+        List<DetalleDocumentosFsBase> registers = service.getRegistersPaginadosPorLoadDate(parsedDate, pageSize, pageNumber);
+        return ResponseEntity.ok(registers);
     }
 
-    @GetMapping("/registros/{loadDate}")
-    public ResponseEntity<List<OdsUser>> obtenerRegistrosPorLoadDate(@PathVariable String loadDate) {
+    @GetMapping("/registros-odsuser/{loadDate}/{pageSize}/{pageNumber}")
+    public ResponseEntity<List<OdsUser>> obtenerRegistrosPaginadosPorLoadDateOdsUser(
+            @PathVariable String loadDate,
+            @PathVariable int pageSize,
+            @PathVariable int pageNumber
+    ) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date parsedDate;
         try {
@@ -56,22 +61,37 @@ public class UserController {
         } catch (ParseException e) {
             return ResponseEntity.badRequest().build();
         }
-        List<OdsUser> registros = service.obtenerRegistrosPorLoadDate(parsedDate);
-        return ResponseEntity.ok(registros);
+        List<OdsUser> registers = service.getRegistersPaginadosPorLoadDateOdsUser(parsedDate, pageSize, pageNumber);
+        return ResponseEntity.ok(registers);
     }
 
-    @GetMapping("/registros-id/{loadDate}")
-    public ResponseEntity<List<OdsUser>> obtenerRegistrosPorLoadDateId(@PathVariable String loadDate) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date parsedDate;
-        try {
-            parsedDate = dateFormat.parse(loadDate);
-        } catch (ParseException e) {
-            return ResponseEntity.badRequest().build();
-        }
-        List<OdsUser> registros = service.obtenerRegistrosPorLoadDateId(parsedDate);
-        return ResponseEntity.ok(registros);
-    }
+    /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
+    // @GetMapping("/registros/{loadDate}")
+    // public ResponseEntity<List<OdsUser>> obtenerRegistrosPorLoadDate(@PathVariable String loadDate) {
+    //     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    //     Date parsedDate;
+    //     try {
+    //         parsedDate = dateFormat.parse(loadDate);
+    //     } catch (ParseException e) {
+    //         return ResponseEntity.badRequest().build();
+    //     }
+    //     List<OdsUser> registros = service.obtenerRegistrosPorLoadDate(parsedDate);
+    //     return ResponseEntity.ok(registros);
+    // }
+    //
+    // @GetMapping("/registros-id/{loadDate}")
+    // public ResponseEntity<List<OdsUser>> obtenerRegistrosPorLoadDateId(@PathVariable String loadDate) {
+    //     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    //     Date parsedDate;
+    //     try {
+    //         parsedDate = dateFormat.parse(loadDate);
+    //     } catch (ParseException e) {
+    //         return ResponseEntity.badRequest().build();
+    //     }
+    //     List<OdsUser> registros = service.obtenerRegistrosPorLoadDateId(parsedDate);
+    //     return ResponseEntity.ok(registros);
+    // }
 
     @GetMapping("/{loadDate}")
     public ResponseEntity<Object> pageLoadDate(@PathVariable String loadDate) {

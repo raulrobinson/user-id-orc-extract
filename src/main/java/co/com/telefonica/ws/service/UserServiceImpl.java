@@ -43,44 +43,51 @@ public class UserServiceImpl implements UserService {
         this.repository = repository;
     }
 
-    /*TEST*/
+    /* >>>>>>>>>>>>>>>>>>>>>>>>>> WORKING 15 */
     @Override
-    public List<DetalleDocumentosFsBase> obtenerRegistrosPaginadosPorLoadDate(Date loadDate, int pageSize, int pageNumber) {
-        //int pageSize = 5;
+    public List<DetalleDocumentosFsBase> getRegistersPaginadosPorLoadDate(Date loadDate, int pageSize, int pageNumber) {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
         Page<DetalleDocumentosFsBase> page = repository.findByLoadDate(loadDate, pageRequest);
         return page.getContent();
     }
 
-
     @Override
-    public List<OdsUser> obtenerRegistrosPorLoadDate(Date loadDate) {
-        int offset = 0;
-        List<OdsUser> registrosTotales = new ArrayList<>();
-        List<OdsUser> registros;
-        do {
-            registros = odsUserRepository.findInGroupsOf100ByLoadDate(loadDate, offset);
-            registrosTotales.addAll(registros);
-            offset += 100;
-        } while (!registros.isEmpty());
-
-        return registrosTotales;
+    public List<OdsUser> getRegistersPaginadosPorLoadDateOdsUser(Date loadDate, int pageSize, int pageNumber) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        Page<OdsUser> page = odsUserRepository.findByLoadDate(loadDate, pageRequest);
+        return page.getContent();
     }
 
-    @Override
-    public List<OdsUser> obtenerRegistrosPorLoadDateId(Date loadDate) {
-        int offset = 0;
-        List<OdsUser> registrosTotales = new ArrayList<>();
-        List<OdsUser> registros;
-        //PageRequest pageRequest = PageRequest.of(0, 10);
-        do {
-            registros = odsUserRepository.findInGroupsOf100ByLoadDateId(loadDate, offset);
-            registrosTotales.addAll(registros);
-            offset += 3;
-        } while (!registros.isEmpty());
+    /* >>>>>>>>>>>>>>>>>>>>>>>>>> */
 
-        return registrosTotales;
-    }
+    // @Override
+    // public List<OdsUser> obtenerRegistrosPorLoadDate(Date loadDate) {
+    //     int offset = 0;
+    //     List<OdsUser> registrosTotales = new ArrayList<>();
+    //     List<OdsUser> registros;
+    //     do {
+    //         registros = odsUserRepository.findInGroupsOf100ByLoadDate(loadDate, offset);
+    //         registrosTotales.addAll(registros);
+    //         offset += 100;
+    //     } while (!registros.isEmpty());
+    //
+    //     return registrosTotales;
+    // }
+    //
+    // @Override
+    // public List<OdsUser> obtenerRegistrosPorLoadDateId(Date loadDate) {
+    //     int offset = 0;
+    //     List<OdsUser> registrosTotales = new ArrayList<>();
+    //     List<OdsUser> registros;
+    //     //PageRequest pageRequest = PageRequest.of(0, 10);
+    //     do {
+    //         registros = odsUserRepository.findInGroupsOf100ByLoadDateId(loadDate, offset);
+    //         registrosTotales.addAll(registros);
+    //         offset += 3;
+    //     } while (!registros.isEmpty());
+    //
+    //     return registrosTotales;
+    // }
     /**** */
 
     @Override
@@ -103,10 +110,11 @@ public class UserServiceImpl implements UserService {
             HashMap<String, Integer> response = new HashMap<>();
             for (int i = 0; i < totalPages; i++) { // # PAGE
                 PageRequest pageRequest = PageRequest.of(i, size);
+                Page<OdsUser> usersPage = odsUserRepository.findByLoadDate(loadDate, pageRequest);
                 //Page<OdsUser> usersPage = odsUserRepository.findUsersByLoadDate(loadDate, 1, 100, pageRequest);
-                //var userList =  convertBatchOdsToPgPage(usersPage);
-                //response.put("PAGE: " + i, userList.size());
-                //sendToPg(userList, dateString, i);
+                var userList =  convertBatchOdsToPgPage(usersPage);
+                response.put("PAGE: " + i, userList.size());
+                sendToPg(userList, dateString, i);
             }
             if (response.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

@@ -10,12 +10,14 @@ import java.util.List;
 
 public interface UserService {
     /*TEST*/
-    List<DetalleDocumentosFsBase> obtenerRegistrosPaginadosPorLoadDate(Date loadDate, int pageSize, int pageNumber);
+    List<DetalleDocumentosFsBase> getRegistersPaginadosPorLoadDate(Date loadDate, int pageSize, int pageNumber);
 
     /*TEST*/
-    List<OdsUser> obtenerRegistrosPorLoadDate(Date loadDate);
+    //List<OdsUser> obtenerRegistrosPorLoadDate(Date loadDate);
 
-    List<OdsUser> obtenerRegistrosPorLoadDateId(Date loadDate);
+    //List<OdsUser> obtenerRegistrosPorLoadDateId(Date loadDate);
+
+    List<OdsUser> getRegistersPaginadosPorLoadDateOdsUser(Date loadDate, int pageSize, int pageNumber);
 
     ResponseEntity<String> sendDataToPgPerDatePage(Date loadDate);
 }
